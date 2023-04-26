@@ -8,7 +8,6 @@ import { render, RenderPosition } from '../render.js';
 const TRIP_POINTS_COUNT = 3;
 
 export default class TripPresenter {
-  listSortComponent = new ListSortView();
 
   constructor({tripFilters, tripList}) {
     this.tripFilters = tripFilters;
@@ -17,8 +16,8 @@ export default class TripPresenter {
 
   init() {
     render(new ListFilterView(), this.tripFilters);
-    render(this.listSortComponent, this.tripList, RenderPosition.BEFOREBEGIN);
-    render(new EditPointView, this.tripList, RenderPosition.AFTERBEGIN);
+    render(new ListSortView(), this.tripList, RenderPosition.BEFOREBEGIN);
+    render(new EditPointView(), this.tripList, RenderPosition.AFTERBEGIN);
     Array.from({length: TRIP_POINTS_COUNT}, () => render(new TripEventsItemView(), this.tripList));
   }
 }
