@@ -30,15 +30,20 @@ export default class TripPresenter {
   getPointPickedOffers (point) {
     const pointType = point.type;
     const pointOffers = point.offers;
-    const offersPicked = [];
-    pointOffers.map((offer) => offersPicked.push(this.offerModel.findOffer(pointType, offer)));
-    return offersPicked;
+    const pickedOffers = [];
+    pointOffers.map((offer) => {
+      const offerObj = this.offerModel.findOffer(pointType, offer);
+      if (offerObj) {
+        pickedOffers.push(offerObj);
+      }
+    });
+    return pickedOffers;
+
   }
 
   getPointAvailableOffers (point) {
     const pointType = point.type;
-    const offersAvailable = this.offerModel.getOffersOfType (pointType);
-    return offersAvailable;
+    return this.offerModel.getOffersByType(pointType);
   }
 
 

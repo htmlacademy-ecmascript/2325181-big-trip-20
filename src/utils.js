@@ -1,5 +1,10 @@
 import dayjs from 'dayjs';
-import {DATE_FORMAT} from './const.js';
+import utc from 'dayjs/plugin/utc';
+import duration from 'dayjs/plugin/duration';
+import {DateFormat} from './const.js';
+
+dayjs.extend(utc);
+dayjs.extend(duration);
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -9,12 +14,18 @@ function getRandomValue(max) {
   return Math.floor(Math.random() * max);
 }
 
-function getDateTimeFormatted (dateTime, format) {
-  return dateTime ? dayjs(dateTime).format(DATE_FORMAT[format]) : '';
+function getDateTimeFormatted (dateTime, dateFormat) {
+  return dateTime ? dayjs.utc(dateTime).format(dateFormat) : '';
 }
 
-function getTimeDifference (dateTimeOne, DateTimeTwo) {
-  return dayjs(dayjs(dateTimeOne).diff(DateTimeTwo)).format(DATE_FORMAT.durationFormat);
+function getTimeDifference (dateTimeOne, dateTimeTwo) {
+  const timeDifference = dayjs(dateTimeOne).diff(dayjs(dateTimeTwo));
+  if (timeDifference < 3600000) {
+    return dayjs.duration(timeDifference).format(DateFormat.DURATION_MINUTES);
+  } else if (timeDifference < 86400000) {
+    return dayjs.duration(timeDifference).format(DateFormat.DURATION_HOURS);
+  }
+  return dayjs.duration(timeDifference).format(DateFormat.DURATION_DAYS);
 }
 
 export {getRandomArrayElement, getRandomValue, getDateTimeFormatted, getTimeDifference};

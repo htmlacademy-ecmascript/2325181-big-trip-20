@@ -1,8 +1,9 @@
 import {getRandomValue} from '../utils.js';
+import {PointTypes} from '../const.js';
 
 const mockOffers = [
   {
-    type: 'taxi',
+    type: PointTypes.TAXI,
     offers: [
       {
         id: '1',
@@ -17,7 +18,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'bus',
+    type: PointTypes.BUS,
     offers: [
       {
         id: '1',
@@ -32,7 +33,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'train',
+    type: PointTypes.TRAIN,
     offers: [
       {
         id: '1',
@@ -47,7 +48,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'ship',
+    type: PointTypes.SHIP,
     offers: [
       {
         id: '1',
@@ -62,7 +63,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'drive',
+    type: PointTypes.DRIVE,
     offers: [
       {
         id: '1',
@@ -77,7 +78,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'flight',
+    type: PointTypes.FLIGHT,
     offers: [
       {
         id: '1',
@@ -92,7 +93,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'check-in',
+    type: PointTypes.CHECK_IN,
     offers: [
       {
         id: '1',
@@ -107,7 +108,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'sightseeing',
+    type: PointTypes.SIGHTSEEING,
     offers: [
       {
         id: '1',
@@ -122,7 +123,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'restaurant',
+    type: PointTypes.RESTAURANT,
     offers: [
       {
         id: '1',

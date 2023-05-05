@@ -1,13 +1,26 @@
-const POINT_TYPES = ['taxi','bus','train','ship','drive','flight','check-in','sightseeing','restaurant'];
+const PointTypes = {
+  TAXI: 'taxi',
+  BUS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECK_IN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant'
+};
+
 
 const TRIP_POINTS_COUNT = 3;
 
-const DATE_FORMAT = {
-  eventStartEndDate:'DD/MM/YY HH:mm',
-  eventStartEndTime: 'HH:mm',
-  startDate: 'YYYY[-]MM[-]DD',
-  eventDate: 'MMM[ ]DD',
-  durationFormat: 'DD[D ]HH[H ]mm[M]',
+const DateFormat = {
+  EVENT_START_END_DATE:'DD/MM/YY HH:mm',
+  EVENT_START_END_TIME: 'HH:mm',
+  START_DATE: 'YYYY[-]MM[-]DD',
+  EVENT_DATE: 'MMM[ ]DD',
+  DURATION_DAYS: 'DD[D ]HH[H ]mm[M]',
+  DURATION_MINUTES: 'mm[M ]',
+  DURATION_HOURS: 'HH[H ]mm[M ]',
 };
 
-export {POINT_TYPES, TRIP_POINTS_COUNT, DATE_FORMAT};
+export {PointTypes, TRIP_POINTS_COUNT, DateFormat};

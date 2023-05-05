@@ -1,12 +1,13 @@
 import { createElement } from '../render.js';
 import {getDateTimeFormatted, } from '../utils.js';
-import {POINT_TYPES} from '../const.js';
+import {PointTypes} from '../const.js';
+import { DateFormat } from '../const.js';
 
 function createPointEditionTemplate(point, offersAvailable, city) {
   const {basePrice, dateFrom, dateTo, offers: offersChosen, type} = point;
   const {name: cityName, description: cityDescription} = city;
-  const eventStartDate = getDateTimeFormatted(dateFrom, 'eventStartEndDate');
-  const eventToDate = getDateTimeFormatted(dateTo, 'eventStartEndDate');
+  const eventStartDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_DATE);
+  const eventToDate = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_DATE);
 
   function createOfferTemplate (offer) {
     const picked = offersChosen.includes(offer.id) ? 'checked' : '';
@@ -21,12 +22,12 @@ function createPointEditionTemplate(point, offersAvailable, city) {
       </div>`);
   }
 
-  function createOffersEditionTemplate(offersAvailablelist) {
-    return offersAvailablelist.map((offer) => createOfferTemplate(offer)).join('');
+  function createOffersEditionTemplate(offersAvailableList) {
+    return offersAvailableList.length ? offersAvailableList.map((offer) => createOfferTemplate(offer)).join('') : '';
   }
 
   function createEventTypeItemTemplate () {
-    return POINT_TYPES.map((pointType) => `<div class="event__type-item">
+    return Object.values(PointTypes).map((pointType) => `<div class="event__type-item">
       <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
       <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointType.charAt(0).toUpperCase().concat(pointType.slice(1))}</label>
       </div>`).join('');
