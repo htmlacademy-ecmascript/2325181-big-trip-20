@@ -24,7 +24,6 @@ function createTripEventsItemTemplate(point, offersArray, city) {
     } return '';
   }
 
-
   return (
     `<li class="trip-events__item">
       <div class="event">
