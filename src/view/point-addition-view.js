@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createPointAdditionTemplate() {
   return (
@@ -165,15 +165,8 @@ function createPointAdditionTemplate() {
   );
 }
 
-export default class PointAdditionView {
-  getTemplate() {
+export default class PointAdditionView extends AbstractView {
+  get template() {
     return createPointAdditionTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
   }
 }

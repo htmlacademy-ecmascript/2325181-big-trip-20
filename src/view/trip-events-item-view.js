@@ -1,7 +1,6 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {getDateTimeFormatted, getTimeDifference} from '../utils.js';
 import {DateFormat} from '../const.js';
-
 
 function createTripEventsItemTemplate(point, offersArray, city) {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
@@ -63,25 +62,26 @@ function createTripEventsItemTemplate(point, offersArray, city) {
   );
 }
 
-export default class TripEventsItemView {
-  constructor({point, offersArray, city}) {
-    this.point = point;
-    this.offersArray = offersArray;
-    this.city = city;
+export default class TripEventsItemView extends AbstractView {
+  #point = null;
+  #offersArray = null;
+  #city = null;
+  #handleButtonClick = null;
+
+  constructor({point, offersArray, city, onButtonClick}) {
+    super();
+    this.#point = point;
+    this.#offersArray = offersArray;
+    this.#city = city;
+    this.#handleButtonClick = onButtonClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
   }
 
-  getTemplate() {
-    return createTripEventsItemTemplate(this.point, this.offersArray, this.city);
+  get template() {
+    return createTripEventsItemTemplate(this.#point, this.#offersArray, this.#city);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #buttonClickHandler = () => {
+    this.#handleButtonClick();
+  };
 }

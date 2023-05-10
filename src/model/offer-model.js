@@ -2,10 +2,10 @@
 import {getAllOffers} from '../mock/offer.js';
 
 export default class OfferModel {
-  allOffers = getAllOffers();
+  #allOffers = getAllOffers();
 
   getOffersByType (offerType) {
-    const offersByTypeObj = this.allOffers.find((offer) => offer.type === offerType);
+    const offersByTypeObj = this.#allOffers.find((offer) => offer.type === offerType);
     return offersByTypeObj ? offersByTypeObj.offers : [];
   }
 
