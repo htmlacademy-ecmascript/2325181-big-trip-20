@@ -53,7 +53,6 @@ export default class TripPresenter {
     return this.#offerModel.getOffersByType(pointType);
   }
 
-
   init() {
     this.#tripPoints = [...this.#tripEventsModel.points];
     this.#pointEdition = this.#pointEditionModel.editionPoint;
