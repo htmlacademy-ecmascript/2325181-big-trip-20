@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventAddButtonTemplate() {
   return (
@@ -6,19 +6,8 @@ function createEventAddButtonTemplate() {
   );
 }
 
-export default class EventAddButtonView {
-  getTemplate() {
+export default class EventAddButtonView extends AbstractView {
+  get template() {
     return createEventAddButtonTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

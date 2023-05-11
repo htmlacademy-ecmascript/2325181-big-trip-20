@@ -1,27 +1,28 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {getDateTimeFormatted, getTimeDifference} from '../utils.js';
-
+import {DateFormat} from '../const.js';
 
 function createTripEventsItemTemplate(point, offersArray, city) {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const {name: cityName} = city;
-  const eventStartDate = getDateTimeFormatted(dateFrom, 'eventStartEndDate');
-  const eventToDate = getDateTimeFormatted(dateTo, 'eventStartEndDate');
-  const eventStartTime = getDateTimeFormatted(dateFrom, 'eventStartEndTime');
-  const eventToTime = getDateTimeFormatted(dateTo, 'eventStartEndTime');
+  const eventStartDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_DATE);
+  const eventToDate = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_DATE);
+  const eventStartTime = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_TIME);
+  const eventToTime = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_TIME);
   const eventDuration = getTimeDifference(dateTo, dateFrom);
-  const startDate = getDateTimeFormatted(dateFrom, 'startDate');
-  const eventDate = getDateTimeFormatted(dateFrom, 'eventDate');
+  const startDate = getDateTimeFormatted(dateFrom, DateFormat.START_DATE);
+  const eventDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_DATE);
   const favorite = isFavorite ? '--active' : '';
 
   function createOffersTemplate(offersList) {
-    return offersList.map((offer) => `<li class="event__offer">
+    if (offersList.length) {
+      return offersList.map((offer) => `<li class="event__offer">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offer.price}</span>
         </li>`).join('');
+    } return '';
   }
-
 
   return (
     `<li class="trip-events__item">
@@ -60,25 +61,26 @@ function createTripEventsItemTemplate(point, offersArray, city) {
   );
 }
 
-export default class TripEventsItemView {
-  constructor({point, offersArray, city}) {
-    this.point = point;
-    this.offersArray = offersArray;
-    this.city = city;
+export default class TripEventsItemView extends AbstractView {
+  #point = null;
+  #offersArray = null;
+  #city = null;
+  #handleButtonClick = null;
+
+  constructor({point, offersArray, city, onButtonClick}) {
+    super();
+    this.#point = point;
+    this.#offersArray = offersArray;
+    this.#city = city;
+    this.#handleButtonClick = onButtonClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
   }
 
-  getTemplate() {
-    return createTripEventsItemTemplate(this.point, this.offersArray, this.city);
+  get template() {
+    return createTripEventsItemTemplate(this.#point, this.#offersArray, this.#city);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #buttonClickHandler = () => {
+    this.#handleButtonClick();
+  };
 }
