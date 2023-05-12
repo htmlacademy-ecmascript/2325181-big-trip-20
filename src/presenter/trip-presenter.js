@@ -5,27 +5,29 @@ import EventAddButtonView from '../view/event-add-button-view.js';
 import PointEditionFormView from '../view/point-edition-form-view.js';
 import TripEventsItemView from '../view/trip-events-item-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
 import { render, replace, RenderPosition } from '../framework/render.js';
+import { createFilter } from '../mock/filter.js';
+import { getDateTimeFormatted } from '../utils/time-date.js';
+import { DateFormat } from '../const.js';
 
 export default class TripPresenter {
 
   #tripList = new TripEventsListView();
+  #listSort = new ListSortView();
   #tripMain = null;
   #tripEvents = null;
   #tripEventsModel = null;
   #offerModel = null;
   #destinationModel = null;
-  #pointEditionModel = null;
   #tripPoints = [];
-  #pointEdition = null;
 
-  constructor({tripMain, tripEvents, tripEventsModel, offerModel, destinationModel, pointEditionModel}) {
+  constructor({tripMain, tripEvents, tripEventsModel, offerModel, destinationModel}) {
     this.#tripMain = tripMain;
     this.#tripEvents = tripEvents;
     this.#tripEventsModel = tripEventsModel;
     this.#offerModel = offerModel;
     this.#destinationModel = destinationModel;
-    this.#pointEditionModel = pointEditionModel;
   }
 
   getPointDestination (point) {
@@ -55,13 +57,8 @@ export default class TripPresenter {
 
   init() {
     this.#tripPoints = [...this.#tripEventsModel.points];
-    this.#pointEdition = this.#pointEditionModel.editionPoint;
-    render(new TripInfoView(), this.#tripMain);
-    render(new ListFilterView(), this.#tripMain);
-    render(new EventAddButtonView(), this.#tripMain);
-    render(this.#tripList, this.#tripEvents);
-    render(new ListSortView(), this.#tripList.element, RenderPosition.BEFOREBEGIN);
-    this.#tripPoints.forEach((point) => this.#renderPoint({point}));
+    this.#tripPoints.sort((pointOne, pointTwo) => Date.parse(pointOne.dateFrom) - Date.parse(pointTwo.dateFrom));
+    this.#renderTrip ();
   }
 
   #renderPoint ({point}) {
@@ -102,6 +99,33 @@ export default class TripPresenter {
     }
 
     render(tripPointComponent, this.#tripList.element);
+  }
+
+  #renderTrip () {
+    const filters = createFilter(this.#tripEventsModel.points);
+    render(new ListFilterView({filters}), this.#tripMain);
+    render(this.#tripList, this.#tripEvents);
+    render(this.#listSort, this.#tripList.element, RenderPosition.BEFOREBEGIN);
+    if (this.#tripPoints.length) {
+      render(new EventAddButtonView({disabled: 'disabled'}), this.#tripMain);
+      this.#tripPoints.forEach((point) => this.#renderPoint({point}));
+      this.#renderTripInfo ();
+    } else {
+      render(new EventAddButtonView({disabled: ''}), this.#tripMain);
+      this.#listSort.removeElement();
+      this.#tripList.removeElement();
+      render(new ListEmptyView, this.#tripEvents);
+    }
+  }
+
+  #renderTripInfo () {
+
+    const tripTotalValue = this.#tripPoints.reduce((acc, point) => acc + point.basePrice, 0);
+    const tripStartDate = getDateTimeFormatted(this.#tripPoints[0].dateFrom, DateFormat.INFO_DAY);
+    const tripEndDate = getDateTimeFormatted(this.#tripPoints[this.#tripPoints.length - 1].dateFrom, DateFormat.INFO_DAY);
+    const tripWay = this.#tripPoints.map((point) => this.getPointDestination(point) !== undefined ?
+      this.getPointDestination(point).name : '');
+    render(new TripInfoView({tripTotalValue, tripStartDate, tripEndDate, tripWay}), this.#tripMain, RenderPosition.AFTERBEGIN);
   }
 
 }

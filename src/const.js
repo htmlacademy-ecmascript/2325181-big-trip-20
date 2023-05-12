@@ -10,6 +10,12 @@ const PointTypes = {
   RESTAURANT: 'restaurant'
 };
 
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
 
 const TRIP_POINTS_COUNT = 3;
 
@@ -21,6 +27,7 @@ const DateFormat = {
   DURATION_DAYS: 'DD[D ]HH[H ]mm[M]',
   DURATION_MINUTES: 'mm[M ]',
   DURATION_HOURS: 'HH[H ]mm[M ]',
+  INFO_DAY:'MMM DD',
 };
 
-export {PointTypes, TRIP_POINTS_COUNT, DateFormat};
+export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType};

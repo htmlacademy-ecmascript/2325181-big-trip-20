@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {getDateTimeFormatted, } from '../utils.js';
+import {getDateTimeFormatted, } from '../utils/time-date.js';
 import {PointTypes} from '../const.js';
 import { DateFormat } from '../const.js';
 
