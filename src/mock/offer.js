@@ -1,4 +1,4 @@
-import {getRandomValue} from '../utils.js';
+import {getRandomValue} from '../utils/common.js';
 import {PointTypes} from '../const.js';
 
 const mockOffers = [

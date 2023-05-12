@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {getDateTimeFormatted, getTimeDifference} from '../utils.js';
+import {getDateTimeFormatted, getTimeDifference} from '../utils/time-date.js';
 import {DateFormat} from '../const.js';
 
 function createTripEventsItemTemplate(point, offersArray, city) {
