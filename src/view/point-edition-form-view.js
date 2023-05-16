@@ -116,17 +116,17 @@ export default class PointEditionFormView extends AbstractView {
   #offersAvailable = null;
   #city = null;
   #handleFormSubmit = null;
-  #handleButtonClick = null;
+  #handleButtonFormClick = null;
 
-  constructor({point, offersAvailable, city, onFormSubmit}) {
+  constructor({point, offersAvailable, city, onFormSubmit, onButtonFormClick}) {
     super();
     this.#point = point;
     this.#offersAvailable = offersAvailable;
     this.#city = city;
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleButtonClick = onFormSubmit;
+    this.#handleButtonFormClick = onButtonFormClick;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickFormHandler);
   }
 
   get template() {
@@ -135,11 +135,11 @@ export default class PointEditionFormView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
-  #buttonClickHandler = () => {
-    this.#handleButtonClick();
+  #buttonClickFormHandler = () => {
+    this.#handleButtonFormClick();
   };
 
 }

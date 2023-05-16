@@ -30,4 +30,14 @@ const DateFormat = {
   INFO_DAY:'MMM DD',
 };
 
-export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType};
+const EventAddButtonStatus = {
+  DISABLED: 'disabled',
+  ENABLED: ''
+};
+
+const PointMode = {
+  VIEW: 'VIEW',
+  EDIT: 'EDIT',
+};
+
+export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode};
