@@ -1,11 +1,12 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { SortOrder } from '../const.js';
 
 function createListSortTemplate() {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
       <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day">
-      <label class="trip-sort__btn" for="sort-day">Day</label>
+      <label class="trip-sort__btn" data-sort-order="${SortOrder.DEFAULT}" for="sort-day">Day</label>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--event">
@@ -15,12 +16,12 @@ function createListSortTemplate() {
 
     <div class="trip-sort__item  trip-sort__item--time">
       <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
-      <label class="trip-sort__btn" for="sort-time">Time</label>
+      <label class="trip-sort__btn" data-sort-order="${SortOrder.DURATION_DOWN}" for="sort-time">Time</label>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--price">
       <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" checked>
-      <label class="trip-sort__btn" for="sort-price">Price</label>
+      <label class="trip-sort__btn" data-sort-order="${SortOrder.PRICE_DOWN}" for="sort-price">Price</label>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--offer">
@@ -32,7 +33,24 @@ function createListSortTemplate() {
 }
 
 export default class ListSortView extends AbstractView {
+  #handleSortOrderChange = null;
+
+  constructor ({onSortOrderChange}) {
+    super();
+    this.#handleSortOrderChange = onSortOrderChange;
+    this.element.addEventListener('click', this.#sortOrderChangeHandler);
+  }
+
   get template() {
     return createListSortTemplate();
   }
+
+  #sortOrderChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'LABEL') {
+      return;
+    }
+    evt.preventDefault();
+    this.#handleSortOrderChange(evt.target.dataset.sortOrder);
+  };
+
 }

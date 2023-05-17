@@ -1,7 +1,7 @@
-import {filter} from '../utils/filter.js';
+import {Filter} from '../utils/filter.js';
 
 function createFilter(points) {
-  return Object.entries(filter).map(
+  return Object.entries(Filter).map(
     ([filterType, filterpoints]) => ({
       type: filterType,
       hasPoints: filterpoints(points),

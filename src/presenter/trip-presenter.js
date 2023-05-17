@@ -8,13 +8,14 @@ import PointPresenter from './point-presenter.js';
 import { render, RenderPosition } from '../framework/render.js';
 import { createFilter } from '../mock/filter.js';
 import { getDateTimeFormatted } from '../utils/time-date.js';
-import { DateFormat, EventAddButtonStatus } from '../const.js';
+import { DateFormat, EventAddButtonStatus, SortOrder } from '../const.js';
 import { updateItem } from '../utils/common.js';
+import { Sort } from '../utils/sort.js';
 
 export default class TripPresenter {
 
   #tripList = new TripEventsListView();
-  #listSort = new ListSortView();
+  #listSort = null;
   #tripMain = null;
   #tripEvents = null;
   #tripEventsModel = null;
@@ -26,6 +27,8 @@ export default class TripPresenter {
   #eventAddButton = null;
   #tripInfo = null;
   #pointPresenters = new Map();
+  #actualSortOrder = SortOrder.DEFAULT;
+
 
   constructor({tripMain, tripEvents, tripEventsModel, offerModel, destinationModel}) {
     this.#tripMain = tripMain;
@@ -61,8 +64,8 @@ export default class TripPresenter {
   }
 
   init() {
+
     this.#tripPoints = [...this.#tripEventsModel.points];
-    this.#tripPoints.sort((pointOne, pointTwo) => Date.parse(pointOne.dateFrom) - Date.parse(pointTwo.dateFrom));
     this.#renderTrip ();
   }
 
@@ -77,8 +80,13 @@ export default class TripPresenter {
     render(this.#tripList, this.#tripEvents);
     this.#renderListSort ();
     if (this.#tripPoints.length) {
+      this.#renderEventAddButton({disabled:EventAddButtonStatus.DISABLED});
       this.#renderPointsList ();
+      this.#renderTripInfo ();
     } else {
+      this.#renderEventAddButton({disabled: EventAddButtonStatus.ENABLED});
+      this.#listSort.removeElement();
+      this.#tripList.removeElement();
       this.#renderListEmpty();
     }
   }
@@ -108,19 +116,32 @@ export default class TripPresenter {
     });
   };
 
+  #sortPoints (sortMethod) {
+    this.#tripPoints.sort(Sort[sortMethod]);
+    this.#actualSortOrder = sortMethod;
+  }
+
+  #handleSortOrderChange = (sortOrder) => {
+    if (this.#actualSortOrder === sortOrder || sortOrder === undefined) {
+      return;
+    }
+    this.#sortPoints(sortOrder);
+    this.#clearTripList();
+    this.#renderPointsList ();
+  };
+
+
   #clearTripList() {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
   }
 
   #renderPointsList () {
-    this.#renderEventAddButton({disabled:EventAddButtonStatus.DISABLED});
-    this.#tripPoints.forEach((point) => this.#renderPoint(point)
-    );
-    this.#renderTripInfo ();
+    this.#tripPoints.forEach((point) => this.#renderPoint(point));
   }
 
   #renderListSort () {
+    this.#listSort = new ListSortView({onSortOrderChange: this.#handleSortOrderChange});
     render(this.#listSort, this.#tripList.element, RenderPosition.BEFOREBEGIN);
   }
 
@@ -134,9 +155,6 @@ export default class TripPresenter {
   }
 
   #renderListEmpty () {
-    this.#renderEventAddButton({disabled: EventAddButtonStatus.ENABLED});
-    this.#listSort.removeElement();
-    this.#tripList.removeElement();
     render(this.#listEmpty, this.#tripEvents);
   }
 
