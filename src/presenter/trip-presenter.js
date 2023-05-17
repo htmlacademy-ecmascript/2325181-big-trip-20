@@ -5,7 +5,7 @@ import EventAddButtonView from '../view/event-add-button-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
-import { render, RenderPosition } from '../framework/render.js';
+import { render, remove, RenderPosition } from '../framework/render.js';
 import { createFilter } from '../mock/filter.js';
 import { getDateTimeFormatted } from '../utils/time-date.js';
 import { DateFormat, EventAddButtonStatus, SortOrder } from '../const.js';
@@ -78,7 +78,7 @@ export default class TripPresenter {
     this.#listFilter = new ListFilterView({filters: filters});
     this.#renderListFilter ();
     render(this.#tripList, this.#tripEvents);
-    this.#renderListSort ();
+    this.#renderListSort (SortOrder.DEFAULT);
     if (this.#tripPoints.length) {
       this.#renderEventAddButton({disabled:EventAddButtonStatus.DISABLED});
       this.#renderPointsList ();
@@ -125,6 +125,8 @@ export default class TripPresenter {
     if (this.#actualSortOrder === sortOrder || sortOrder === undefined) {
       return;
     }
+    remove(this.#listSort);
+    this.#renderListSort(sortOrder);
     this.#sortPoints(sortOrder);
     this.#clearTripList();
     this.#renderPointsList ();
@@ -140,8 +142,8 @@ export default class TripPresenter {
     this.#tripPoints.forEach((point) => this.#renderPoint(point));
   }
 
-  #renderListSort () {
-    this.#listSort = new ListSortView({onSortOrderChange: this.#handleSortOrderChange});
+  #renderListSort (sortOrder) {
+    this.#listSort = new ListSortView({onSortOrderChange: this.#handleSortOrderChange, sortOrder});
     render(this.#listSort, this.#tripList.element, RenderPosition.BEFOREBEGIN);
   }
 
