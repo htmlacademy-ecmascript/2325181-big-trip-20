@@ -40,4 +40,10 @@ const PointMode = {
   EDIT: 'EDIT',
 };
 
-export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode};
+const SortOrder = {
+  DEFAULT: 'default',
+  DURATION_DOWN: 'duration-down',
+  PRICE_DOWN: 'price-down',
+};
+
+export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder};
