@@ -6,14 +6,13 @@ import { PointMode } from '../const.js';
 export default class PointPresenter {
   #tripList = null;
   #point = null;
-  #offersPicked = null;
-  #offersAvailable = null;
-  #city = null;
   #tripPointComponent = null;
   #editionFormComponent = null;
   #handlePointChange = null;
   #handleModeChange = null;
   #mode = PointMode.VIEW;
+  #allDestinations = null;
+  #allOffers = null;
 
 
   constructor ({tripList, onPointChange, onModeChange}) {
@@ -23,29 +22,28 @@ export default class PointPresenter {
   }
 
 
-  init ({point, offersPicked, offersAvailable, city}) {
+  init ({point, allDestinations, allOffers}) {
 
     const prevTripPointComponent = this.#tripPointComponent;
     const prevEditionFormComponent = this.#editionFormComponent;
     this.#point = point;
-    this.#offersPicked = offersPicked;
-    this.#offersAvailable = offersAvailable;
-    this.#city = city;
+    this.#allDestinations = allDestinations;
+    this.#allOffers = allOffers;
 
     this.#tripPointComponent = new TripEventsItemView({
       point: this.#point,
-      offersArray: this.#offersPicked,
-      city: this.#city,
       onButtonPointClick: this.#handleButtonPointClick,
-      onFavoriteClick: this.#handleFavoriteClick
+      onFavoriteClick: this.#handleFavoriteClick,
+      allOffers: this.#allOffers,
+      allDestinations: this.#allDestinations
     });
 
     this.#editionFormComponent = new PointEditionFormView({
       point: this.#point,
-      offersAvailable: this.#offersAvailable,
-      city: this.#city,
+      allDestinations: this.#allDestinations,
       onFormSubmit: this.#handleFormSubmit,
-      onButtonFormClick: this.#handleButtonFormClick
+      onButtonFormClick: this.#handleButtonFormClick,
+      allOffers: this.#allOffers
     });
 
     if (prevTripPointComponent === null || prevEditionFormComponent === null) {
@@ -72,6 +70,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== PointMode.VIEW) {
+      this.#editionFormComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
@@ -92,6 +91,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editionFormComponent.reset(this.#point);
       this.#replaceFormToPoint();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
@@ -109,6 +109,7 @@ export default class PointPresenter {
   };
 
   #handleButtonFormClick = () => {
+    this.#editionFormComponent.reset(this.#point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };

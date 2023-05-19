@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {getDateTimeFormatted, getTimeDifference} from '../utils/time-date.js';
 import {DateFormat} from '../const.js';
+import { findArrayElementById, findArrayElementByType} from '../utils/model.js';
 
 function createTripEventsItemTemplate(point, offersArray, city) {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
@@ -67,12 +68,16 @@ export default class TripEventsItemView extends AbstractView {
   #city = null;
   #handleButtonPointClick = null;
   #handleFavoriteClick = null;
+  #allDestinations = null;
+  #allOffers = null;
 
-  constructor({point, offersArray, city, onButtonPointClick, onFavoriteClick}) {
+  constructor({point, onButtonPointClick, onFavoriteClick, allOffers, allDestinations}) {
     super();
     this.#point = point;
-    this.#offersArray = offersArray;
-    this.#city = city;
+    this.#allDestinations = allDestinations;
+    this.#allOffers = allOffers;
+    this.#offersArray = this.#getPointPickedOffers(this.#point);
+    this.#city = findArrayElementById(this.#allDestinations, point.destination);
     this.#handleButtonPointClick = onButtonPointClick;
     this.#handleFavoriteClick = onFavoriteClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonPointClickHandler);
@@ -91,4 +96,18 @@ export default class TripEventsItemView extends AbstractView {
     evt.preventDefault();
     this.#handleFavoriteClick();
   };
+
+  #getPointPickedOffers (point) {
+    const pointOffers = point.offers;
+    const pickedOffers = [];
+    const offersByType = findArrayElementByType(this.#allOffers, point.type)?.offers;
+    pointOffers.map((offer) => {
+      const offerObj = findArrayElementById(offersByType, offer);
+      if (offerObj) {
+        pickedOffers.push(offerObj);
+      }
+    });
+    return pickedOffers;
+
+  }
 }
