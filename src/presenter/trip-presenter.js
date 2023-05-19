@@ -11,6 +11,7 @@ import { getDateTimeFormatted } from '../utils/time-date.js';
 import { DateFormat, EventAddButtonStatus, SortOrder } from '../const.js';
 import { updateItem } from '../utils/common.js';
 import { Sort } from '../utils/sort.js';
+import { findArrayElementById } from '../utils/model.js';
 
 export default class TripPresenter {
 
@@ -42,25 +43,6 @@ export default class TripPresenter {
     const pointDestinationId = point.destination;
     const destinationName = this.#destinationModel.findDestination(pointDestinationId);
     return destinationName;
-  }
-
-  #getPointPickedOffers (point) {
-    const pointType = point.type;
-    const pointOffers = point.offers;
-    const pickedOffers = [];
-    pointOffers.map((offer) => {
-      const offerObj = this.#offerModel.findOffer(pointType, offer);
-      if (offerObj) {
-        pickedOffers.push(offerObj);
-      }
-    });
-    return pickedOffers;
-
-  }
-
-  #getPointAvailableOffers (point) {
-    const pointType = point.type;
-    return this.#offerModel.getOffersByType(pointType);
   }
 
   init() {
@@ -99,9 +81,8 @@ export default class TripPresenter {
     });
     pointPresenter.init({
       point: point,
-      offersPicked: this.#getPointPickedOffers (point),
-      offersAvailable: this.#getPointAvailableOffers(point),
-      city: this.#getPointDestination(point)
+      allDestinations: this.#destinationModel.allDestinations,
+      allOffers: this.#offerModel.allOffers,
     });
     this.#pointPresenters.set(point.id, pointPresenter);
   }
@@ -110,15 +91,18 @@ export default class TripPresenter {
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init({
       point: updatedPoint,
-      offersPicked: this.#getPointPickedOffers (updatedPoint),
-      offersAvailable: this.#getPointAvailableOffers(updatedPoint),
-      city: this.#getPointDestination(updatedPoint)
+      allDestinations: this.#destinationModel.allDestinations,
+      allOffers: this.#offerModel.allOffers,
     });
+    remove(this.#tripInfo);
+    this.#renderTripInfo ();
   };
 
-  #sortPoints (sortMethod) {
-    this.#tripPoints.sort(Sort[sortMethod]);
-    this.#actualSortOrder = sortMethod;
+  #sortPoints (pointsList, sortMethod, isSortMethodChange = true) {
+    pointsList.sort(Sort[sortMethod]);
+    if (isSortMethodChange) {
+      this.#actualSortOrder = sortMethod;
+    }
   }
 
   #handleSortOrderChange = (sortOrder) => {
@@ -127,7 +111,7 @@ export default class TripPresenter {
     }
     remove(this.#listSort);
     this.#renderListSort(sortOrder);
-    this.#sortPoints(sortOrder);
+    this.#sortPoints(this.#tripPoints, sortOrder, true);
     this.#clearTripList();
     this.#renderPointsList ();
   };
@@ -161,12 +145,13 @@ export default class TripPresenter {
   }
 
   #renderTripInfo () {
-
-    const tripTotalValue = this.#tripPoints.reduce((acc, point) => acc + point.basePrice, 0);
-    const tripStartDate = getDateTimeFormatted(this.#tripPoints[0].dateFrom, DateFormat.INFO_DAY);
-    const tripEndDate = getDateTimeFormatted(this.#tripPoints[this.#tripPoints.length - 1].dateFrom, DateFormat.INFO_DAY);
-    const tripWay = this.#tripPoints.map((point) => this.#getPointDestination(point) !== undefined ?
-      this.#getPointDestination(point).name : '');
+    const tripPointsCopy = structuredClone(this.#tripPoints);
+    this.#sortPoints (tripPointsCopy, SortOrder.DEFAULT, false);
+    const tripTotalValue = tripPointsCopy.reduce((acc, point) => acc + point.basePrice, 0);
+    const tripStartDate = getDateTimeFormatted(tripPointsCopy[0].dateFrom, DateFormat.INFO_DAY);
+    const tripEndDate = getDateTimeFormatted(tripPointsCopy[tripPointsCopy.length - 1].dateFrom, DateFormat.INFO_DAY);
+    const tripWay = tripPointsCopy.map((point) => findArrayElementById(this.#destinationModel.allDestinations, point.destination) !== undefined ?
+      findArrayElementById(this.#destinationModel.allDestinations, point.destination).name : '');
     this.#tripInfo = new TripInfoView({tripTotalValue, tripStartDate, tripEndDate, tripWay});
     render(this.#tripInfo, this.#tripMain, RenderPosition.AFTERBEGIN);
   }
