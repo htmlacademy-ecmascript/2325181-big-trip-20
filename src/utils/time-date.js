@@ -1,13 +1,11 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
 import {DateFormat} from '../const.js';
 
-dayjs.extend(utc);
 dayjs.extend(duration);
 
 function getDateTimeFormatted (dateTime, dateFormat) {
-  return dateTime ? dayjs.utc(dateTime).format(dateFormat) : '';
+  return dateTime ? dayjs(dateTime).format(dateFormat) : '';
 }
 
 function getTimeDifference (dateTimeOne, dateTimeTwo, isFormat = 'true') {
