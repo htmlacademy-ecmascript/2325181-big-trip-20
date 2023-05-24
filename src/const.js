@@ -14,7 +14,7 @@ const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
-  PAST: 'past',
+  PAST: 'past'
 };
 
 const TRIP_POINTS_COUNT = 3;
@@ -27,7 +27,7 @@ const DateFormat = {
   DURATION_DAYS: 'DD[D ]HH[H ]mm[M]',
   DURATION_MINUTES: 'mm[M ]',
   DURATION_HOURS: 'HH[H ]mm[M ]',
-  INFO_DAY:'MMM DD',
+  INFO_DAY:'MMM DD'
 };
 
 const EventAddButtonStatus = {
@@ -37,13 +37,21 @@ const EventAddButtonStatus = {
 
 const PointMode = {
   VIEW: 'VIEW',
-  EDIT: 'EDIT',
+  EDIT: 'EDIT'
 };
 
 const SortOrder = {
   DEFAULT: 'default',
   DURATION_DOWN: 'duration-down',
-  PRICE_DOWN: 'price-down',
+  PRICE_DOWN: 'price-down'
 };
 
-export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder};
+const PickerConfiguration = {
+  DATE_FORMAT: 'd/m/y H:i',
+  START_DATE_PROPERTY: 'newStartDateTime',
+  END_DATE_PROPERTY: 'newEndDateTime',
+  START_DATE_ELEMENT_ID: 'event-start-time-1',
+  END_DATE_ELEMENT_ID: 'event-end-time-1'
+};
+
+export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration};
