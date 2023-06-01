@@ -54,4 +54,29 @@ const PickerConfiguration = {
   END_DATE_ELEMENT_ID: 'event-end-time-1'
 };
 
-export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT'
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
+};
+
+const modelCallback = {
+  UPDATE_POINT: 'updatePoint',
+  ADD_POINT: 'addPoint',
+  DELETE_POINT: 'deletePoint'
+};
+
+const ListEmptyMessage = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+};
+
+export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, modelCallback, ListEmptyMessage};
