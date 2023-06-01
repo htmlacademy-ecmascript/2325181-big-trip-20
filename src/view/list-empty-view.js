@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FilterType, ListEmptyMessage } from '../const.js';
+import { ListEmptyMessage } from '../const.js';
 
 function createListEmptyTemplate(filterType) {
   const noEventsMessage = ListEmptyMessage[filterType];
