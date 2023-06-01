@@ -1,7 +1,7 @@
 import PointEditionFormView from '../view/point-edition-form-view.js';
 import TripEventsItemView from '../view/trip-events-item-view.js';
 import { render, replace, remove } from '../framework/render.js';
-import { PointMode } from '../const.js';
+import { PointMode, UserAction, UpdateType } from '../const.js';
 
 export default class PointPresenter {
   #tripList = null;
@@ -43,6 +43,7 @@ export default class PointPresenter {
       allDestinations: this.#allDestinations,
       onFormSubmit: this.#handleFormSubmit,
       onButtonFormClick: this.#handleButtonFormClick,
+      onDeleteClick: this.#handleDeleteClick,
       allOffers: this.#allOffers
     });
 
@@ -89,7 +90,7 @@ export default class PointPresenter {
   }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#editionFormComponent.reset(this.#point);
       this.#replaceFormToPoint();
@@ -103,7 +104,16 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#handlePointChange(point);
+    const isPatch =
+      point.destination === this.#point.destination &&
+      point.dateFrom === this.#point.dateFrom &&
+      point.dateTo === this.#point.dateTo &&
+      point.basePrice === this.#point.basePrice;
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      isPatch ? UpdateType.PATCH : UpdateType.MINOR,
+      point
+    );
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
@@ -114,8 +124,20 @@ export default class PointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
+  #handleDeleteClick = (point) => {
+    this.#handlePointChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
+  };
+
   #handleFavoriteClick = () => {
-    this.#handlePointChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
   };
 
 }

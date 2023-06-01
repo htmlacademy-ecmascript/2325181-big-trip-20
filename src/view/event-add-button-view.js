@@ -1,20 +1,27 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createEventAddButtonTemplate(isDisabled) {
+function createEventAddButtonTemplate() {
   return (
-    `<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button" ${isDisabled}>New event</button>`
+    '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>'
   );
 }
 
 export default class EventAddButtonView extends AbstractView {
-  #isDisabled = null;
+  #handleClick = null;
 
-  constructor ({disabled}) {
+  constructor ({onClick}) {
     super();
-    this.#isDisabled = disabled;
+    this.#handleClick = onClick;
+    this.element.addEventListener('click', this.#clickHandler);
   }
+
 
   get template() {
-    return createEventAddButtonTemplate(this.#isDisabled);
+    return createEventAddButtonTemplate();
   }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }

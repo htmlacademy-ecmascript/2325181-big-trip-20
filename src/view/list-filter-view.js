@@ -1,17 +1,17 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createFilterElementTemplate({filterElement, isChecked}) {
+function createFilterElementTemplate(filterElement, actualFilterType) {
   const {type, hasPoints} = filterElement;
   return (
     `<div class="trip-filters__filter">
-      <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${isChecked ? 'checked' : ''} ${hasPoints ? '' : 'disabled'}>
+      <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${type === actualFilterType ? 'checked' : ''} ${hasPoints.length ? '' : 'disabled'}>
       <label class="trip-filters__filter-label" for="filter-${type}">${type.charAt(0).toUpperCase().concat(type.slice(1))}</label>
     </div>`
   );
 }
 
-function createListFilterTemplate({filtersList}) {
-  const filterElements = filtersList.map((filter, index) => createFilterElementTemplate({filterElement: filter, isChecked: index === 0}))
+function createListFilterTemplate(filtersList, actualFilterType) {
+  const filterElements = filtersList.map((filter) => createFilterElementTemplate(filter, actualFilterType))
     .join('');
   return (
     `<div class="trip-main__trip-controls  trip-controls">
@@ -29,13 +29,26 @@ function createListFilterTemplate({filtersList}) {
 
 export default class ListFilterView extends AbstractView {
   #filters = [];
-  constructor ({filters}) {
+  #currentFilterType = null;
+  #handleFilterTypeChange = null;
+
+  constructor ({filters, currentFilterType, onFilterTypeChange}) {
     super();
     this.#filters = filters;
+    this.#currentFilterType = currentFilterType;
+    this.#handleFilterTypeChange = onFilterTypeChange;
 
+    this.element.addEventListener('change', this.#filterTypeChangeHandler);
   }
 
   get template() {
-    return createListFilterTemplate({filtersList: this.#filters});
+    return createListFilterTemplate(this.#filters, this.#currentFilterType);
   }
+
+  #filterTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFilterTypeChange(evt.target.value);
+  };
+
+
 }
