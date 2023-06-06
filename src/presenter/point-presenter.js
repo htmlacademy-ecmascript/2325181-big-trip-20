@@ -29,7 +29,6 @@ export default class PointPresenter {
     this.#point = point;
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
-
     this.#tripPointComponent = new TripEventsItemView({
       point: this.#point,
       onButtonPointClick: this.#handleButtonPointClick,

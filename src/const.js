@@ -1,3 +1,4 @@
+
 const PointTypes = {
   TAXI: 'taxi',
   BUS: 'bus',
@@ -16,8 +17,6 @@ const FilterType = {
   PRESENT: 'present',
   PAST: 'past'
 };
-
-const TRIP_POINTS_COUNT = 3;
 
 const DateFormat = {
   EVENT_START_END_DATE:'DD/MM/YY HH:mm',
@@ -63,10 +62,11 @@ const UserAction = {
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
-const modelCallback = {
+const ModelCallback = {
   UPDATE_POINT: 'updatePoint',
   ADD_POINT: 'addPoint',
   DELETE_POINT: 'deletePoint'
@@ -77,6 +77,16 @@ const ListEmptyMessage = {
   [FilterType.FUTURE]: 'There are no future events now',
   [FilterType.PAST]: 'There are no past events now',
   [FilterType.PRESENT]: 'There are no present events now',
+  LOADING: 'Loading...',
 };
 
-export {PointTypes, TRIP_POINTS_COUNT, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, modelCallback, ListEmptyMessage};
+const HttpRequestMethod = {
+  GET: 'GET',
+  PUT: 'PUT'
+};
+
+const AUTHORIZATION_TOKEN = 'Basic F5C4D99F86C940EC9D37447078319D92';
+
+const END_POINT = 'https://20.ecmascript.pages.academy';
+
+export {PointTypes, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, ModelCallback, ListEmptyMessage, HttpRequestMethod, AUTHORIZATION_TOKEN, END_POINT};

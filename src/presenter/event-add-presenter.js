@@ -44,7 +44,6 @@ export default class EventAddPresenter {
       allOffers: this.#allOffers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
-      onButtonFormClick: this.#handleButtonFormClick,
       newPoint: true
     });
     render(this.#editionFormComponent, this.#tripList, RenderPosition.AFTERBEGIN);
@@ -68,7 +67,7 @@ export default class EventAddPresenter {
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       {id: nanoid(), ...point},
     );
     this.destroy();
@@ -83,10 +82,6 @@ export default class EventAddPresenter {
       evt.preventDefault();
       this.destroy();
     }
-  };
-
-  #handleButtonFormClick = () => {
-    this.destroy();
   };
 
 }

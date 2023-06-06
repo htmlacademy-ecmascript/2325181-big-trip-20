@@ -1,17 +1,26 @@
-
-import {getAllDestinations} from '../mock/destination.js';
-
 export default class DestinationModel {
-  #allDestinations = getAllDestinations();
+  #allDestinations = [];
+  #destinationsApiService = null;
+
+  constructor({destinationsApiService}) {
+    this.#destinationsApiService = destinationsApiService;
+  }
 
   get allDestinations () {
     return this.#allDestinations;
   }
 
-
-  findDestination (destinationId) {
-    return this.#allDestinations.find((destination) => destination.id === destinationId);
+  async init () {
+    let destinationsFromServer;
+    try {
+      destinationsFromServer = await this.#destinationsApiService.destinations;
+    } catch (err) {
+      destinationsFromServer = [];
+    } finally {
+      this.#allDestinations.push(...destinationsFromServer);
+    }
   }
+
 
 }
 
