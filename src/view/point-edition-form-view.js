@@ -126,7 +126,7 @@ function createPointEditionFormTemplate(state, isNewPoint, allDestinations) {
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
-          <button class="event__rollup-btn" type="button">
+          ${isNewPoint ? '' : '<button class="event__rollup-btn" type="button">'}
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
@@ -152,14 +152,15 @@ export default class PointEditionFormView extends AbstractStatefulView {
   constructor({point, onFormSubmit, onButtonFormClick, onDeleteClick, allOffers, allDestinations, newPoint = false}) {
     super();
     this.#allDestinations = allDestinations;
-
+    this.#isNewPoint = newPoint;
     this.#city = point.destination ? findArrayElementById(this.#allDestinations, point.destination) : '';
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleButtonFormClick = onButtonFormClick;
+    if (!this.#isNewPoint) {
+      this.#handleButtonFormClick = onButtonFormClick;
+    }
     this.#allOffers = allOffers;
     this.#offersAvailable = findArrayElementByType(this.#allOffers, point.type)?.offers;
     this.#handleDeleteClick = onDeleteClick;
-    this.#isNewPoint = newPoint;
     this._setState(PointEditionFormView.parsePointToState(point, this.#city, this.#offersAvailable));
     this._restoreHandlers();
 
@@ -201,7 +202,9 @@ export default class PointEditionFormView extends AbstractStatefulView {
 
   _restoreHandlers () {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickFormHandler);
+    if (!this.#isNewPoint) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickFormHandler);
+    }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeListChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#eventInputDestinationChangeHandler);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#eventOfferSelectionHandler);

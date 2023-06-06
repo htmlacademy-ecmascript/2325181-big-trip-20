@@ -7,14 +7,13 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #tripEventsModel = null;
-
+  #isLoading = null;
   #filterComponent = null;
 
   constructor({filterContainer, filterModel, tripEventsModel}) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#tripEventsModel = tripEventsModel;
-
     this.#tripEventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -24,14 +23,15 @@ export default class FilterPresenter {
     return Object.entries(Filter).map(
       ([filterType, filterpoints]) => ({
         type: filterType,
-        hasPoints: filterpoints(points),
+        hasPoints: points !== null ? filterpoints(points) : [],
       }),
     );
   }
 
-  init() {
+  init({isLoading}) {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
+    this.#isLoading = isLoading;
 
     this.#filterComponent = new FilterView({
       filters,
@@ -48,14 +48,16 @@ export default class FilterPresenter {
   }
 
   #handleModelEvent = () => {
-    this.init();
+    this.init({isLoading: this.#isLoading});
   };
 
   #handleFilterTypeChange = (filterType) => {
-    if (this.#filterModel.filter === filterType) {
-      return;
-    }
+    if (!this.#isLoading) {
+      if (this.#filterModel.filter === filterType) {
+        return;
+      }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+      this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    }
   };
 }

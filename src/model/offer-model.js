@@ -1,22 +1,26 @@
-
-import {getAllOffers} from '../mock/offer.js';
-
 export default class OfferModel {
-  #allOffers = getAllOffers();
+  #allOffers = [];
+  #offersApiService = null;
+
+  constructor({offersApiService}) {
+    this.#offersApiService = offersApiService;
+  }
 
   get allOffers () {
     return this.#allOffers;
   }
 
-  getOffersByType (offerType) {
-    const offersByTypeObj = this.#allOffers.find((offer) => offer.type === offerType);
-    return offersByTypeObj ? offersByTypeObj.offers : [];
+  async init () {
+    let offersFromServer;
+    try {
+      offersFromServer = await this.#offersApiService.offers;
+    } catch (err) {
+      offersFromServer = [];
+    } finally {
+      this.#allOffers.push(...offersFromServer);
+    }
   }
 
-  findOffer (offerType, offerId) {
-    const offersArray = this.getOffersByType(offerType);
-    return offersArray.length ? offersArray.find((offer) => offer.id === offerId) : '';
-  }
 }
 
 
