@@ -1,8 +1,6 @@
 import ApiService from './framework/api-service.js';
 import { HttpRequestMethod, UrlRoutes, HEADER } from './const.js';
 
-
-
 export default class PointsApiService extends ApiService {
 
   get points () {
