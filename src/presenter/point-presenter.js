@@ -56,7 +56,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === PointMode.EDIT) {
-      replace(this.#editionFormComponent, prevEditionFormComponent);
+      replace(this.#tripPointComponent, prevEditionFormComponent);
+      this.#mode = PointMode.VIEW;
     }
 
     remove(prevTripPointComponent);
@@ -73,6 +74,32 @@ export default class PointPresenter {
       this.#editionFormComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
+  }
+
+  setSavingDeleting(saveDeleteStatus) {
+    if (this.#mode === PointMode.EDIT) {
+      this.#editionFormComponent.updateElement({
+        isDisabled: true,
+        [saveDeleteStatus]: true,
+      });
+    }
+  }
+
+  setAborting () {
+    if (this.#mode === PointMode.VIEW) {
+      this.#tripPointComponent.shake();
+      return;
+    }
+
+    const resetPointState = () => {
+      this.#editionFormComponent.updateElement({
+        isDisabled: false,
+        isDeleting: false,
+        isSaving: false,
+      });
+    };
+
+    this.#editionFormComponent.shake(resetPointState);
   }
 
   #replacePointToForm() {
@@ -113,7 +140,6 @@ export default class PointPresenter {
       isPatch ? UpdateType.PATCH : UpdateType.MINOR,
       point
     );
-    this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 

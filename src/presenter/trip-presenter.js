@@ -9,9 +9,10 @@ import EventAddPresenter from './event-add-presenter.js';
 import {Filter} from '../utils/filter.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { getDateTimeFormatted } from '../utils/time-date.js';
-import { DateFormat, SortOrder, ModelCallback, UpdateType, FilterType } from '../const.js';
+import { DateFormat, SortOrder, UpdateType, FilterType, UserAction, SaveDeleteStatus, BlockTimeLimit } from '../const.js';
 import { Sort } from '../utils/sort.js';
 import { findArrayElementById } from '../utils/model.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class TripPresenter {
 
@@ -32,7 +33,10 @@ export default class TripPresenter {
   #actualFilterType = FilterType.EVERYTHING;
   #isLoading = true;
   #filterPresenter = null;
-
+  #uiBlocker = new UiBlocker({
+    lowerLimit: BlockTimeLimit.LOWER_LIMIT,
+    upperLimit: BlockTimeLimit.UPPER_LIMIT
+  });
 
   constructor({tripMain, tripEvents, tripEventsModel, offerModel, destinationModel, filterModel}) {
     this.#tripMain = tripMain;
@@ -61,11 +65,6 @@ export default class TripPresenter {
     const filteredPoints = Filter[this.#actualFilterType](points);
     return filteredPoints.sort(Sort[this.#actualSortOrder]);
   }
-
-  #handleModeChange = () => {
-    this.#eventAddPresenter.destroy();
-    this.#pointPresenters.forEach((presenter) => presenter.resetView());
-  };
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
@@ -147,8 +146,21 @@ export default class TripPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
-    this.#tripEventsModel[ModelCallback[actionType]](updateType, update);
+  #handleModeChange = () => {
+    this.#eventAddPresenter.destroy();
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+    const activePresenter = (actionType === UserAction.ADD_POINT) ? this.#eventAddPresenter : this.#pointPresenters.get(update.id);
+    activePresenter.setSavingDeleting(SaveDeleteStatus[actionType]);
+    try {
+      await this.#tripEventsModel[actionType](updateType, update);
+    } catch (err) {
+      activePresenter.setAborting();
+    }
+    this.#uiBlocker.unblock();
   };
 
   #handlePointChange = (updatedPoint) => {

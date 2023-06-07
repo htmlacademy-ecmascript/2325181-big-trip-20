@@ -54,9 +54,9 @@ const PickerConfiguration = {
 };
 
 const UserAction = {
-  UPDATE_POINT: 'UPDATE_POINT',
-  ADD_POINT: 'ADD_POINT',
-  DELETE_POINT: 'DELETE_POINT'
+  UPDATE_POINT: 'updatePoint',
+  ADD_POINT: 'addPoint',
+  DELETE_POINT: 'deletePoint'
 };
 
 const UpdateType = {
@@ -64,12 +64,6 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT'
-};
-
-const ModelCallback = {
-  UPDATE_POINT: 'updatePoint',
-  ADD_POINT: 'addPoint',
-  DELETE_POINT: 'deletePoint'
 };
 
 const ListEmptyMessage = {
@@ -82,11 +76,24 @@ const ListEmptyMessage = {
 
 const HttpRequestMethod = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
 };
 
 const AUTHORIZATION_TOKEN = 'Basic F5C4D99F86C940EC9D37447078319D92';
 
 const END_POINT = 'https://20.ecmascript.pages.academy';
 
-export {PointTypes, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, ModelCallback, ListEmptyMessage, HttpRequestMethod, AUTHORIZATION_TOKEN, END_POINT};
+const SaveDeleteStatus = {
+  [UserAction.UPDATE_POINT]: 'isSaving',
+  [UserAction.ADD_POINT]: 'isSaving',
+  [UserAction.DELETE_POINT]: 'isDeleting'
+};
+
+const BlockTimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};
+
+export {PointTypes, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, ListEmptyMessage, HttpRequestMethod, AUTHORIZATION_TOKEN, END_POINT, SaveDeleteStatus, BlockTimeLimit};
