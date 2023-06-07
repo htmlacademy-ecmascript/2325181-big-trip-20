@@ -1,29 +1,31 @@
 import ApiService from './framework/api-service.js';
-import { HttpRequestMethod } from './const.js';
+import { HttpRequestMethod, UrlRoutes, HEADER } from './const.js';
+
+
 
 export default class PointsApiService extends ApiService {
 
   get points () {
-    return this._load({url: 'big-trip/points'})
+    return this._load({url: UrlRoutes.POINTS})
       .then(ApiService.parseResponse);
   }
 
   get destinations () {
-    return this._load({url: 'big-trip/destinations'})
+    return this._load({url: UrlRoutes.DESTINATIONS})
       .then(ApiService.parseResponse);
   }
 
   get offers () {
-    return this._load({url: 'big-trip/offers'})
+    return this._load({url: UrlRoutes.OFFERS})
       .then(ApiService.parseResponse);
   }
 
   async updatePoint (point) {
     const response = await this._load({
-      url: `big-trip/points/${point.id}`,
+      url: `${UrlRoutes.POINTS}/${point.id}`,
       method: HttpRequestMethod.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
-      headers: new Headers({'Content-Type': 'application/json'}),
+      headers: new Headers(HEADER),
     });
 
     return await ApiService.parseResponse(response);
@@ -31,10 +33,10 @@ export default class PointsApiService extends ApiService {
 
   async addPoint (point) {
     const response = await this._load({
-      url: 'big-trip/points',
+      url: UrlRoutes.POINTS,
       method: HttpRequestMethod.POST,
       body: JSON.stringify(this.#adaptToServer(point)),
-      headers: new Headers({'Content-Type': 'application/json'}),
+      headers: new Headers(HEADER),
     });
 
     return await ApiService.parseResponse(response);
@@ -42,7 +44,7 @@ export default class PointsApiService extends ApiService {
 
   async deletePoint (point) {
     return await this._load({
-      url: `big-trip/points/${point.id}`,
+      url: `${UrlRoutes.POINTS}/${point.id}`,
       method: HttpRequestMethod.DELETE,
     });
   }

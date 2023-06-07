@@ -29,8 +29,6 @@ const tripPresenter = new TripPresenter({
 });
 
 tripPresenter.init ();
-destinationModel.init ();
-offerModel.init ();
 tripEventsModel.init ();
 
 

@@ -71,7 +71,7 @@ export default class EventAddPresenter {
   }
 
   setAborting () {
-    const resetPointState = this.#editionFormComponent.updateElement({
+    const resetPointState = () => this.#editionFormComponent.updateElement({
       isDisabled: false,
       isDeleting: false,
       isSaving: false

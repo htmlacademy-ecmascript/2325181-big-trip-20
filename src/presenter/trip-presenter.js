@@ -79,19 +79,27 @@ export default class TripPresenter {
         this.#resetSortOrder();
         break;
       case UpdateType.INIT:
-        remove(this.#listEmptyComponent);
-        if(this.#destinationModel.allDestinations.length && this.#offerModel.allOffers.length) {
-          this.#isLoading = false;
-          this.#eventAddButtonComponent.element.disabled = false;
-          this.#renderListFilter ();
-          this.#resetSortOrder();
-        } else {
-          this.#renderListEmpty(true);
-        }
-
+        this.#renderInitialPointsList ();
         break;
     }
   };
+
+  #renderInitialPointsList = async() => {
+    try {
+      await Promise.all([
+        this.#destinationModel.init(),
+        this.#offerModel.init()
+      ]);
+      remove(this.#listEmptyComponent);
+      this.#isLoading = false;
+      this.#eventAddButtonComponent.element.disabled = false;
+      this.#renderListFilter ();
+      this.#resetSortOrder();
+    } catch (err) {
+      this.#renderListEmpty(true);
+    }
+  };
+
 
   init() {
     this.#renderListFilter ();
@@ -101,6 +109,7 @@ export default class TripPresenter {
       this.#eventAddButtonComponent.element.disabled = true;
       this.#renderListEmpty();
     }
+
   }
 
   #renderPointsList () {

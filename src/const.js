@@ -83,7 +83,16 @@ const HttpRequestMethod = {
 
 const AUTHORIZATION_TOKEN = 'Basic F5C4D99F86C940EC9D37447078319D92';
 
-const END_POINT = 'https://20.ecmascript.pages.academy';
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip/';
+
+const HEADER = {'Content-Type': 'application/json'};
+
+const UrlRoutes = {
+  POINTS: 'points',
+  DESTINATIONS: 'destinations',
+  OFFERS: 'offers'
+};
+
 
 const SaveDeleteStatus = {
   [UserAction.UPDATE_POINT]: 'isSaving',
@@ -96,4 +105,4 @@ const BlockTimeLimit = {
   UPPER_LIMIT: 1000
 };
 
-export {PointTypes, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, ListEmptyMessage, HttpRequestMethod, AUTHORIZATION_TOKEN, END_POINT, SaveDeleteStatus, BlockTimeLimit};
+export {PointTypes, DateFormat, FilterType, EventAddButtonStatus, PointMode, SortOrder, PickerConfiguration, UserAction, UpdateType, ListEmptyMessage, HttpRequestMethod, AUTHORIZATION_TOKEN, END_POINT, SaveDeleteStatus, BlockTimeLimit, UrlRoutes, HEADER};
