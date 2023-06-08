@@ -1,11 +1,10 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import PointEditionView from '../view/point-edition-form-view.js';
-import {nanoid} from 'nanoid';
 import {UserAction, UpdateType} from '../const.js';
 
 function getEmptyPoint () {
   return {
-    id: nanoid(),
+    id: '',
     basePrice: 0,
     dateFrom: null,
     dateTo: null,
@@ -64,13 +63,29 @@ export default class EventAddPresenter {
 
   }
 
+  setSavingDeleting (saveDeleteStatus) {
+    this.#editionFormComponent.updateElement({
+      isDisabled: true,
+      [saveDeleteStatus]: true,
+    });
+  }
+
+  setAborting () {
+    const resetPointState = () => this.#editionFormComponent.updateElement({
+      isDisabled: false,
+      isDeleting: false,
+      isSaving: false
+    });
+
+    this.#editionFormComponent.shake(resetPointState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

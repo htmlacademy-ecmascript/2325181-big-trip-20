@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createTripInfoTemplate(totalValue, startDate, endDate, tripWay) {
-  const tripWayDescription = tripWay.length > 3 ? tripWay.at(1).concat('&nbsp;&mdash;&nbsp;&hellip;&nbsp;&mdash;&nbsp', tripWay.at(-1)) : tripWay.join(' &mdash; ');
+  const tripWayDescription = tripWay.length > 3 ? tripWay.at(0).concat('&nbsp;&mdash;&nbsp;&hellip;&nbsp;&mdash;&nbsp', tripWay.at(-1)) : tripWay.join(' &mdash; ');
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
