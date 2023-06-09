@@ -134,7 +134,8 @@ export default class PointPresenter {
       point.destination === this.#point.destination &&
       point.dateFrom === this.#point.dateFrom &&
       point.dateTo === this.#point.dateTo &&
-      point.basePrice === this.#point.basePrice;
+      point.basePrice === this.#point.basePrice &&
+      JSON.stringify(point.offers) === JSON.stringify(this.#point.offers);
     this.#handlePointChange(
       UserAction.UPDATE_POINT,
       isPatch ? UpdateType.PATCH : UpdateType.MINOR,

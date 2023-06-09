@@ -185,7 +185,7 @@ export default class PointEditionFormView extends AbstractStatefulView {
       newCityName: city ? city?.name : '',
       newCityDescription: city ? city?.description : '',
       newOffersAvailable: offersAvailableList,
-      newPointOffers: point.offers,
+      newPointOffers: [...point.offers],
       newCityPictures: city ? city?.pictures : [],
       newStartDateTime: point.dateFrom,
       newEndDateTime: point.dateTo,
@@ -273,14 +273,14 @@ export default class PointEditionFormView extends AbstractStatefulView {
 
   #eventOfferSelectionHandler = (evt) => {
     const offerSelected = evt.target.dataset.offerId;
-    const offersPicked = this._state.newPointOffers;
+    const offersPicked = [...this._state.newPointOffers];
     if (!offersPicked.includes(offerSelected)) {
       offersPicked.push(offerSelected);
     } else {
       offersPicked.splice(offersPicked.lastIndexOf(offerSelected), 1);
     }
     this.updateElement({
-      newPointOffers: offersPicked
+      newPointOffers: [...offersPicked]
     });
   };
 
@@ -324,7 +324,7 @@ export default class PointEditionFormView extends AbstractStatefulView {
     const point = {...state};
     if (point.eventType !== point.type) {
       point.type = point.eventType;
-      point.offers = point.newPointOffers;
+      point.offers = [...point.newPointOffers];
     }
 
     if (point.destination !== point.newPointDestinationId) {
@@ -338,6 +338,9 @@ export default class PointEditionFormView extends AbstractStatefulView {
     }
     if (point.basePrice !== point.newValue) {
       point.basePrice = point.newValue;
+    }
+    if (JSON.stringify(point.offers) !== JSON.stringify(point.newPointOffers)) {
+      point.offers = [...point.newPointOffers];
     }
 
 
