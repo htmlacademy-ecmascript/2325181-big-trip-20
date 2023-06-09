@@ -11,7 +11,7 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import { getDateTimeFormatted } from '../utils/time-date.js';
 import { DateFormat, SortOrder, UpdateType, FilterType, UserAction, SaveDeleteStatus, BlockTimeLimit } from '../const.js';
 import { Sort } from '../utils/sort.js';
-import { findArrayElementById } from '../utils/model.js';
+import { findArrayElementById, findArrayElementByType } from '../utils/model.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class TripPresenter {
@@ -183,7 +183,16 @@ export default class TripPresenter {
   renderTripInfo () {
     if (this.#tripEventsModel.points?.length) {
       const tripPointsCopy = [...this.#tripEventsModel.points].sort(Sort[SortOrder.DEFAULT]);
-      const tripTotalValue = tripPointsCopy.reduce((acc, point) => acc + point.basePrice, 0);
+      const getOfferValue = (accPrice, offer, point) => {
+        const offersByType = findArrayElementByType(this.#offerModel.allOffers, point.type);
+        const offerById = findArrayElementById(offersByType?.offers, offer);
+        return accPrice + offerById.price;
+      };
+      const tripTotalValue = tripPointsCopy.reduce(
+        (accValue, point) => accValue + point.basePrice + point.offers.reduce(
+          (accPrice, offer) => getOfferValue (accPrice, offer, point), 0
+        ), 0
+      );
       const tripStartDate = getDateTimeFormatted(tripPointsCopy[0].dateFrom, DateFormat.INFO_DAY);
       const tripEndDate = getDateTimeFormatted(tripPointsCopy[tripPointsCopy.length - 1].dateTo, DateFormat.INFO_DAY);
       const tripWay = tripPointsCopy.map((point) => findArrayElementById(this.#destinationModel.allDestinations, point.destination) !== undefined ?

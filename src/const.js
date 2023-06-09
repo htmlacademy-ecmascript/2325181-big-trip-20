@@ -81,7 +81,7 @@ const HttpRequestMethod = {
   DELETE: 'DELETE'
 };
 
-const AUTHORIZATION_TOKEN = 'Basic F5C4D99F86C940EC9D37447078319D92';
+const AUTHORIZATION_TOKEN = 'Basic F5C4D99F86C940EC9D37447078319D93';
 
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip/';
 
