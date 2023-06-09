@@ -96,7 +96,6 @@ export default class TripPresenter {
       this.#renderListFilter ();
       this.#resetSortOrder();
     } catch (err) {
-      console.log(err);
       this.#renderListEmpty(true);
     }
   };
@@ -184,14 +183,14 @@ export default class TripPresenter {
   renderTripInfo () {
     if (this.#tripEventsModel.points?.length) {
       const tripPointsCopy = [...this.#tripEventsModel.points].sort(Sort[SortOrder.DEFAULT]);
-      const getOffersValue = (accPrice, offer, point) => {
+      const getOfferValue = (accPrice, offer, point) => {
         const offersByType = findArrayElementByType(this.#offerModel.allOffers, point.type);
         const offerById = findArrayElementById(offersByType?.offers, offer);
         return accPrice + offerById.price;
       };
       const tripTotalValue = tripPointsCopy.reduce(
         (accValue, point) => accValue + point.basePrice + point.offers.reduce(
-          (accPrice, offer) => getOffersValue (accPrice, offer, point), 0
+          (accPrice, offer) => getOfferValue (accPrice, offer, point), 0
         ), 0
       );
       const tripStartDate = getDateTimeFormatted(tripPointsCopy[0].dateFrom, DateFormat.INFO_DAY);
