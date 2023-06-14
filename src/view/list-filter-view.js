@@ -50,6 +50,4 @@ export default class ListFilterView extends AbstractView {
     evt.preventDefault();
     this.#handleFilterTypeChange(evt.target.value);
   };
-
-
 }

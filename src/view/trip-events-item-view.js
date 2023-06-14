@@ -88,15 +88,6 @@ export default class TripEventsItemView extends AbstractView {
     return createTripEventsItemTemplate(this.#point, this.#offersArray, this.#city);
   }
 
-  #buttonPointClickHandler = () => {
-    this.#handleButtonPointClick();
-  };
-
-  #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFavoriteClick();
-  };
-
   #getPointPickedOffers (point) {
     const pointOffers = point.offers;
     const pickedOffers = [];
@@ -108,6 +99,14 @@ export default class TripEventsItemView extends AbstractView {
       }
     });
     return pickedOffers;
-
   }
+
+  #buttonPointClickHandler = () => {
+    this.#handleButtonPointClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
+  };
 }

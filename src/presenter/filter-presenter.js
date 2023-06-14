@@ -21,9 +21,9 @@ export default class FilterPresenter {
   get filters() {
     const points = this.#tripEventsModel.points;
     return Object.entries(Filter).map(
-      ([filterType, filterpoints]) => ({
+      ([filterType, filterPoints]) => ({
         type: filterType,
-        hasPoints: filterpoints(points) ?? [],
+        hasPoints: filterPoints(points) ?? [],
       }),
     );
   }

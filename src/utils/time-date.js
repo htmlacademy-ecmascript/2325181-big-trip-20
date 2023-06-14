@@ -10,11 +10,11 @@ function getDateTimeFormatted (dateTime, dateFormat) {
 
 const getTimeInMinutes = (date) => Math.floor(new Date(date).getTime() / TimeMeasures.MILLISECONDS_IN_MINUTE) * TimeMeasures.MILLISECONDS_IN_MINUTE;
 
-function getTimeDifference (dateTimeOne, dateTimeTwo, isFormat = 'true') {
+function getTimeDifference (dateTimeOne, dateTimeTwo, isFormat = true) {
   dateTimeOne = getTimeInMinutes(dateTimeOne);
   dateTimeTwo = getTimeInMinutes(dateTimeTwo);
   const timeDifference = dayjs(dateTimeOne).diff(dayjs(dateTimeTwo));
-  if (isFormat === 'false') {
+  if (!isFormat) {
     return timeDifference;
   }
   if (timeDifference < TimeMeasures.MILLISECONDS_IN_HOUR) {

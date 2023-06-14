@@ -14,16 +14,13 @@ export default class PointPresenter {
   #allDestinations = null;
   #allOffers = null;
 
-
   constructor ({tripList, onPointChange, onModeChange}) {
     this.#tripList = tripList;
     this.#handlePointChange = onPointChange;
     this.#handleModeChange = onModeChange;
   }
 
-
   init ({point, allDestinations, allOffers}) {
-
     const prevTripPointComponent = this.#tripPointComponent;
     const prevEditionFormComponent = this.#editionFormComponent;
     this.#point = point;

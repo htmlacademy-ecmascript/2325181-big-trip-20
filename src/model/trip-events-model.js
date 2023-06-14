@@ -38,18 +38,17 @@ export default class TripEventsModel extends Observable {
     } catch (err) {
       throw new Error(DownloadErrorMessage.ERROR_POINTS);
     }
-    this._notify(UpdateType.INIT);
+    this._notify(UpdateType.INIT, this.#points);
   }
 
   async updatePoint (updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
     if (index === -1) {
-      throw new Error(DownloadErrorMessage.ERROR_UNEXISTING_UPDATE);
+      throw new Error(DownloadErrorMessage.ERROR_NOT_EXISTING_UPDATE);
     }
     try {
       const response = await this.#pointsApiService.updatePoint(update);
-      const updatedPoint = this.#adaptToClient(response);
-      this.#points[index] = updatedPoint;
+      this.#points[index] = this.#adaptToClient(response);
       this._notify(updateType, update);
     } catch (err) {
       throw new Error(DownloadErrorMessage.ERROR_UPDATE);

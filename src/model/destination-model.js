@@ -1,6 +1,7 @@
 import { DownloadErrorMessage } from '../const.js';
 
 export default class DestinationModel {
+
   #allDestinations = [];
   #destinationsApiService = null;
 

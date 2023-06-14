@@ -84,7 +84,7 @@ const HttpRequestMethod = {
 
 const AUTHORIZATION_TOKEN = 'Basic F5C4D99F86C940EC9D37447078319D93';
 
-const END_POINT = 'https://20.ecmascript.pages.academy/big-trip/';
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
 const HEADER = {
   'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ const DownloadErrorMessage = {
   ERROR_OFFERS: 'Can\'t download offers.',
   ERROR_POINTS: 'Can\'t download points.',
   ERROR_UPDATE: 'Can\'t update point',
-  ERROR_UNEXISTING_UPDATE: 'Can\'t update unexisting point',
+  ERROR_NOT_EXISTING_UPDATE: 'Can\'t update not existing point',
   ERROR_ADD: 'Can\'t add point',
   ERROR_DELETE: 'Can\'t delete point',
   ERROR_DOWNLOAD: 'Failed to download trip events. Please restart. '
