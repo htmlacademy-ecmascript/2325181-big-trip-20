@@ -1,9 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { SortOrder } from '../const.js';
+import { SortOrder, ElementsStatus } from '../const.js';
 
 function checkSort(sortType) {
   return function (dataSort) {
-    return dataSort === sortType ? 'checked' : '';
+    return dataSort === sortType ? ElementsStatus.CHECKED : '';
   };
 }
 

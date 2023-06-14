@@ -23,7 +23,7 @@ export default class FilterPresenter {
     return Object.entries(Filter).map(
       ([filterType, filterpoints]) => ({
         type: filterType,
-        hasPoints: points !== null ? filterpoints(points) : [],
+        hasPoints: filterpoints(points) ?? [],
       }),
     );
   }

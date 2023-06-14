@@ -1,13 +1,12 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { ListEmptyMessage } from '../const.js';
+import { ListEmptyMessage, DownloadErrorMessage } from '../const.js';
 
 function createListEmptyTemplate(filterType, loading, isFailure) {
   const failureMessage = isFailure ?
-    'Failed to download trip events. Please restart. ' :
-    '';
+    DownloadErrorMessage.ERROR_DOWNLOAD : '';
 
   const noEventsMessage = loading ?
-    'Loading..' :
+    ListEmptyMessage.LOADING :
     ListEmptyMessage[filterType];
 
   return `<p class="trip-events__msg">${failureMessage || noEventsMessage}</p>`;

@@ -1,3 +1,5 @@
+import { DownloadErrorMessage } from '../const.js';
+
 export default class DestinationModel {
   #allDestinations = [];
   #destinationsApiService = null;
@@ -11,13 +13,11 @@ export default class DestinationModel {
   }
 
   async init () {
-    let destinationsFromServer;
     try {
-      destinationsFromServer = await this.#destinationsApiService.destinations;
-    } catch (err) {
-      destinationsFromServer = [];
-    } finally {
+      const destinationsFromServer = await this.#destinationsApiService.destinations;
       this.#allDestinations.push(...destinationsFromServer);
+    } catch (err) {
+      throw new Error(DownloadErrorMessage.ERROR_DESTINATIONS);
     }
   }
 

@@ -21,7 +21,7 @@ export default class TripInfoView extends AbstractView {
   #tripTotalValue = null;
   #tripStartDate = null;
   #tripEndDate = null;
-  #tripWay = [];
+  #tripWay = null;
 
   constructor ({tripTotalValue, tripStartDate, tripEndDate, tripWay}) {
     super();

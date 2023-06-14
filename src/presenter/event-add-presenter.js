@@ -1,6 +1,6 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import PointEditionView from '../view/point-edition-form-view.js';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType, PointTypes} from '../const.js';
 
 function getEmptyPoint () {
   return {
@@ -10,7 +10,7 @@ function getEmptyPoint () {
     dateTo: null,
     destination: '',
     isFavorite: false,
-    type: 'taxi',
+    type: PointTypes.TAXI,
     offers: [],
   };
 }
