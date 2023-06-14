@@ -3,7 +3,7 @@ import {getDateTimeFormatted, getTimeDifference} from '../utils/time-date.js';
 import {DateFormat, ElementsStatus} from '../const.js';
 import { findArrayElementById, findArrayElementByType} from '../utils/model.js';
 
-function createTripEventsItemTemplate(point, offersArray, city) {
+function createTripEventsItemTemplate(point, pickedOffers, city) {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const {name: cityName} = city ? city : {name: ''};
   const eventStartDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_DATE);
@@ -46,7 +46,7 @@ function createTripEventsItemTemplate(point, offersArray, city) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${createOffersTemplate(offersArray)}
+          ${createOffersTemplate(pickedOffers)}
         </ul>
         <button class="event__favorite-btn event__favorite-btn${favorite}" type="button">
           <span class="visually-hidden">Add to favorite</span>
@@ -64,7 +64,7 @@ function createTripEventsItemTemplate(point, offersArray, city) {
 
 export default class TripEventsItemView extends AbstractView {
   #point = null;
-  #offersArray = null;
+  #pickedOffers = null;
   #city = null;
   #handleButtonPointClick = null;
   #handleFavoriteClick = null;
@@ -76,7 +76,7 @@ export default class TripEventsItemView extends AbstractView {
     this.#point = point;
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
-    this.#offersArray = this.#getPointPickedOffers(this.#point);
+    this.#pickedOffers = this.#getPointPickedOffers(this.#point);
     this.#city = point.destination ? findArrayElementById(this.#allDestinations, point.destination) : '';
     this.#handleButtonPointClick = onButtonPointClick;
     this.#handleFavoriteClick = onFavoriteClick;
@@ -85,17 +85,17 @@ export default class TripEventsItemView extends AbstractView {
   }
 
   get template() {
-    return createTripEventsItemTemplate(this.#point, this.#offersArray, this.#city);
+    return createTripEventsItemTemplate(this.#point, this.#pickedOffers, this.#city);
   }
 
   #getPointPickedOffers (point) {
     const pointOffers = point.offers;
     const pickedOffers = [];
     const offersByType = findArrayElementByType(this.#allOffers, point.type)?.offers;
-    pointOffers.map((offer) => {
-      const offerObj = findArrayElementById(offersByType, offer);
-      if (offerObj) {
-        pickedOffers.push(offerObj);
+    pointOffers.map((offerId) => {
+      const offer = findArrayElementById(offersByType, offerId);
+      if (offer) {
+        pickedOffers.push(offer);
       }
     });
     return pickedOffers;
