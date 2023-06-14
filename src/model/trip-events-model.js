@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { UpdateType } from '../const.js';
+import { UpdateType, DownloadErrorMessage, ClientServerAdaptingFields } from '../const.js';
 
 export default class TripEventsModel extends Observable {
   #pointsApiService = null;
@@ -15,58 +15,57 @@ export default class TripEventsModel extends Observable {
   }
 
   #adaptToClient (point) {
-    const adaptedPoint = {...point,
-      basePrice: point['base_price'],
-      dateTo: point['date_to'],
-      dateFrom: point['date_from'],
-      isFavorite: point['is_favorite'],
+    const adaptedPoint = {
+      ...point,
+      basePrice: point[ClientServerAdaptingFields.BASE_PRICE],
+      dateTo: point[ClientServerAdaptingFields.DATE_TO],
+      dateFrom: point[ClientServerAdaptingFields.DATE_FROM],
+      isFavorite: point[ClientServerAdaptingFields.IS_FAVORITE],
     };
 
-    delete adaptedPoint['base_price'];
-    delete adaptedPoint['date_to'];
-    delete adaptedPoint['date_from'];
-    delete adaptedPoint['is_favorite'];
+    delete adaptedPoint[ClientServerAdaptingFields.BASE_PRICE];
+    delete adaptedPoint[ClientServerAdaptingFields.DATE_TO];
+    delete adaptedPoint[ClientServerAdaptingFields.DATE_FROM];
+    delete adaptedPoint[ClientServerAdaptingFields.IS_FAVORITE];
 
     return adaptedPoint;
   }
 
   async init () {
-    let pointsFromServer;
     try {
-      pointsFromServer = await this.#pointsApiService.points;
-    } catch (err) {
-      pointsFromServer = [];
-    } finally {
+      const pointsFromServer = await this.#pointsApiService.points;
       this.#points.push(...pointsFromServer.map(this.#adaptToClient));
+    } catch (err) {
+      throw new Error(DownloadErrorMessage.ERROR_POINTS);
     }
-
-    this._notify(UpdateType.INIT);
-
+    this._notify(UpdateType.INIT, this.#points);
   }
 
   async updatePoint (updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
     if (index === -1) {
-      throw new Error('Can\'t update unexisting point');
+      throw new Error(DownloadErrorMessage.ERROR_NOT_EXISTING_UPDATE);
     }
     try {
-      const response = await this.#pointsApiService.updatePoint(update);
-      const updatedPoint = this.#adaptToClient(response);
-      this.#points[index] = updatedPoint;
+      this.#points[index] = this.#adaptToClient(
+        await this.#pointsApiService.updatePoint(update)
+      );
       this._notify(updateType, update);
     } catch (err) {
-      throw new Error('Can\'t update point');
+      throw new Error(DownloadErrorMessage.ERROR_UPDATE);
     }
   }
 
   async addPoint (updateType, update) {
     try {
-      const newPoint = this.#adaptToClient(await this.#pointsApiService.addPoint(update));
-      this.#points = this.points;
-      this.#points.push(newPoint);
+      this.#points = this.points?.push(
+        this.#adaptToClient(
+          await this.#pointsApiService.addPoint(update)
+        )
+      );
       this._notify(updateType, update);
     } catch (err) {
-      throw new Error ('Can\'t add point');
+      throw new Error (DownloadErrorMessage.ERROR_ADD);
     }
   }
 
@@ -77,7 +76,7 @@ export default class TripEventsModel extends Observable {
       this.#points.splice(index, 1);
       this._notify(updateType, update);
     } catch (err) {
-      throw new Error ('Can\'t delete point');
+      throw new Error (DownloadErrorMessage.ERROR_DELETE);
     }
   }
 

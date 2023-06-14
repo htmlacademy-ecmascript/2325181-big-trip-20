@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {getDateTimeFormatted, } from '../utils/time-date.js';
-import {PointTypes, DateFormat, PickerConfiguration } from '../const.js';
+import {PointTypes, DateFormat, PickerConfiguration,ElementsStatus } from '../const.js';
 import { findArrayElementById, findArrayElementByType, findArrayElementByName } from '../utils/model.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -23,18 +23,18 @@ function createPointEditionFormTemplate(state, isNewPoint, allDestinations) {
   } = state;
   const eventStartDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_DATE);
   const eventToDate = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_DATE);
-  const disabled = isDisabled ? 'disabled' : '';
+  const disabled = isDisabled ? ElementsStatus.DISABLED : '';
   const getDeleteCancelStatus = (newPoint, deleting) => {
     if (newPoint) {
-      return deleting ? 'Canceling' : 'Cancel';
+      return deleting ? 'Canceling...' : 'Cancel';
     } else {
-      return deleting ? 'Deleting' : 'Delete';
+      return deleting ? 'Deleting...' : 'Delete';
     }
   };
 
   function createOfferTemplate (offer) {
 
-    const picked = newPointOffers.includes(offer.id) ? 'checked' : '';
+    const picked = newPointOffers.includes(offer.id) ? ElementsStatus.CHECKED : '';
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${offer.id}" data-offer-id="${offer.id}" type="checkbox" name="event-offer-${type}" ${picked}  ${disabled}>
@@ -177,23 +177,8 @@ export default class PointEditionFormView extends AbstractStatefulView {
 
   }
 
-  static parsePointToState(point, city, offersAvailableList) {
-    return {
-      ...point,
-      eventType: point.type,
-      newPointDestinationId: point.destination,
-      newCityName: city ? city?.name : '',
-      newCityDescription: city ? city?.description : '',
-      newOffersAvailable: offersAvailableList,
-      newPointOffers: [...point.offers],
-      newCityPictures: city ? city?.pictures : [],
-      newStartDateTime: point.dateFrom,
-      newEndDateTime: point.dateTo,
-      newValue: point.basePrice,
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false
-    };
+  get template() {
+    return createPointEditionFormTemplate(this._state, this.#isNewPoint, this.#allDestinations);
   }
 
   removeElement() {
@@ -232,7 +217,8 @@ export default class PointEditionFormView extends AbstractStatefulView {
     return {
       dateFormat: PickerConfiguration.DATE_FORMAT,
       enableTime: true,
-      'time_24hr': true,
+      minuteIncrement: 1,
+      [PickerConfiguration.TIME_24HR]: true,
       defaultDate: this._state[isStartPicker ? PickerConfiguration.START_DATE_PROPERTY : PickerConfiguration.END_DATE_PROPERTY],
       minDate: this._state[isStartPicker ? '' : PickerConfiguration.START_DATE_PROPERTY],
       maxDate: this._state[isStartPicker ? PickerConfiguration.END_DATE_PROPERTY : ''],
@@ -246,10 +232,6 @@ export default class PointEditionFormView extends AbstractStatefulView {
     this.#startDatePicker = flatpickr(this.element.querySelector(`#${PickerConfiguration.START_DATE_ELEMENT_ID}`), this.#getPickerOptions (true));
     this.#endDatePicker = flatpickr(this.element.querySelector(`#${PickerConfiguration.END_DATE_ELEMENT_ID}`), this.#getPickerOptions (false));
   };
-
-  get template() {
-    return createPointEditionFormTemplate(this._state, this.#isNewPoint, this.#allDestinations);
-  }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
@@ -361,5 +343,24 @@ export default class PointEditionFormView extends AbstractStatefulView {
     delete point.isDeleting;
 
     return point;
+  }
+
+  static parsePointToState(point, city, offersAvailableList) {
+    return {
+      ...point,
+      eventType: point.type,
+      newPointDestinationId: point.destination,
+      newCityName: city?.name ?? '',
+      newCityDescription: city?.description ?? '',
+      newOffersAvailable: offersAvailableList,
+      newPointOffers: [...point.offers],
+      newCityPictures: city?.pictures ?? [],
+      newStartDateTime: point.dateFrom,
+      newEndDateTime: point.dateTo,
+      newValue: point.basePrice,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    };
   }
 }

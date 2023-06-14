@@ -1,5 +1,5 @@
 import ApiService from './framework/api-service.js';
-import { HttpRequestMethod, UrlRoutes, HEADER } from './const.js';
+import { HttpRequestMethod, UrlRoutes, HEADER, ClientServerAdaptingFields } from './const.js';
 
 export default class PointsApiService extends ApiService {
 
@@ -48,11 +48,12 @@ export default class PointsApiService extends ApiService {
   }
 
   #adaptToServer (point) {
-    const adaptedPoint = { ...point,
-      'base_price': point.basePrice,
-      'date_to': point.dateTo,
-      'date_from': point.dateFrom,
-      'is_favorite': point.isFavorite,
+    const adaptedPoint = {
+      ...point,
+      [ClientServerAdaptingFields.BASE_PRICE]: point.basePrice,
+      [ClientServerAdaptingFields.DATE_TO]: point.dateTo,
+      [ClientServerAdaptingFields.DATE_FROM]: point.dateFrom,
+      [ClientServerAdaptingFields.IS_FAVORITE]: point.isFavorite,
     };
 
     delete adaptedPoint.basePrice;

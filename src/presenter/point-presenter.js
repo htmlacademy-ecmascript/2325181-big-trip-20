@@ -14,16 +14,13 @@ export default class PointPresenter {
   #allDestinations = null;
   #allOffers = null;
 
-
   constructor ({tripList, onPointChange, onModeChange}) {
     this.#tripList = tripList;
     this.#handlePointChange = onPointChange;
     this.#handleModeChange = onModeChange;
   }
 
-
   init ({point, allDestinations, allOffers}) {
-
     const prevTripPointComponent = this.#tripPointComponent;
     const prevEditionFormComponent = this.#editionFormComponent;
     this.#point = point;
@@ -162,7 +159,10 @@ export default class PointPresenter {
     this.#handlePointChange(
       UserAction.UPDATE_POINT,
       UpdateType.PATCH,
-      {...this.#point, isFavorite: !this.#point.isFavorite}
+      {
+        ...this.#point,
+        isFavorite: !this.#point.isFavorite
+      }
     );
   };
 

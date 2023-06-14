@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {DateFormat} from '../const.js';
+import {DateFormat, TimeMeasures} from '../const.js';
 
 dayjs.extend(duration);
 
@@ -8,14 +8,18 @@ function getDateTimeFormatted (dateTime, dateFormat) {
   return dateTime ? dayjs(dateTime).format(dateFormat) : '';
 }
 
-function getTimeDifference (dateTimeOne, dateTimeTwo, isFormat = 'true') {
+const getTimeInMinutes = (date) => Math.floor(new Date(date).getTime() / TimeMeasures.MILLISECONDS_IN_MINUTE) * TimeMeasures.MILLISECONDS_IN_MINUTE;
+
+function getTimeDifference (dateTimeOne, dateTimeTwo, isFormat = true) {
+  dateTimeOne = getTimeInMinutes(dateTimeOne);
+  dateTimeTwo = getTimeInMinutes(dateTimeTwo);
   const timeDifference = dayjs(dateTimeOne).diff(dayjs(dateTimeTwo));
-  if (isFormat === 'false') {
+  if (!isFormat) {
     return timeDifference;
   }
-  if (timeDifference < 3600000) {
+  if (timeDifference < TimeMeasures.MILLISECONDS_IN_HOUR) {
     return dayjs.duration(timeDifference).format(DateFormat.DURATION_MINUTES);
-  } else if (timeDifference < 86400000) {
+  } else if (timeDifference < TimeMeasures.MILLISECONDS_IN_DAY) {
     return dayjs.duration(timeDifference).format(DateFormat.DURATION_HOURS);
   }
   return dayjs.duration(timeDifference).format(DateFormat.DURATION_DAYS);

@@ -1,4 +1,7 @@
+import { DownloadErrorMessage } from '../const.js';
+
 export default class OfferModel {
+
   #allOffers = [];
   #offersApiService = null;
 
@@ -11,13 +14,10 @@ export default class OfferModel {
   }
 
   async init () {
-    let offersFromServer;
     try {
-      offersFromServer = await this.#offersApiService.offers;
+      this.#allOffers.push(...await this.#offersApiService.offers);
     } catch (err) {
-      offersFromServer = [];
-    } finally {
-      this.#allOffers.push(...offersFromServer);
+      throw new Error(DownloadErrorMessage.ERROR_OFFERS);
     }
   }
 

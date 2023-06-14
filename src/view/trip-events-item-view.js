@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {getDateTimeFormatted, getTimeDifference} from '../utils/time-date.js';
-import {DateFormat} from '../const.js';
+import {DateFormat, ElementsStatus} from '../const.js';
 import { findArrayElementById, findArrayElementByType} from '../utils/model.js';
 
 function createTripEventsItemTemplate(point, offersArray, city) {
@@ -10,10 +10,10 @@ function createTripEventsItemTemplate(point, offersArray, city) {
   const eventToDate = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_DATE);
   const eventStartTime = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_TIME);
   const eventToTime = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_TIME);
-  const eventDuration = dateFrom === null || dateTo === null ? '' : getTimeDifference(dateTo, dateFrom);
+  const eventDuration = getTimeDifference(dateTo, dateFrom) ?? '';
   const startDate = getDateTimeFormatted(dateFrom, DateFormat.START_DATE);
   const eventDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_DATE);
-  const favorite = isFavorite ? '--active' : '';
+  const favorite = isFavorite ? ElementsStatus.ACTIVE : '';
 
   function createOffersTemplate(offersList) {
     if (offersList.length) {
@@ -88,15 +88,6 @@ export default class TripEventsItemView extends AbstractView {
     return createTripEventsItemTemplate(this.#point, this.#offersArray, this.#city);
   }
 
-  #buttonPointClickHandler = () => {
-    this.#handleButtonPointClick();
-  };
-
-  #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFavoriteClick();
-  };
-
   #getPointPickedOffers (point) {
     const pointOffers = point.offers;
     const pickedOffers = [];
@@ -108,6 +99,14 @@ export default class TripEventsItemView extends AbstractView {
       }
     });
     return pickedOffers;
-
   }
+
+  #buttonPointClickHandler = () => {
+    this.#handleButtonPointClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
+  };
 }
