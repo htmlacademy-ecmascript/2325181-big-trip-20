@@ -137,7 +137,7 @@ const TimeMeasures = {
   MILLISECONDS_IN_MINUTE: 60000,
   MILLISECONDS_IN_HOUR: 3600000,
   MILLISECONDS_IN_DAY: 86400000,
-}
+};
 
 export {
   PointTypes,
