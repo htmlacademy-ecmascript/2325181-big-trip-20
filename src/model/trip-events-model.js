@@ -47,8 +47,9 @@ export default class TripEventsModel extends Observable {
       throw new Error(DownloadErrorMessage.ERROR_NOT_EXISTING_UPDATE);
     }
     try {
-      const response = await this.#pointsApiService.updatePoint(update);
-      this.#points[index] = this.#adaptToClient(response);
+      this.#points[index] = this.#adaptToClient(
+        await this.#pointsApiService.updatePoint(update)
+      );
       this._notify(updateType, update);
     } catch (err) {
       throw new Error(DownloadErrorMessage.ERROR_UPDATE);
@@ -57,9 +58,11 @@ export default class TripEventsModel extends Observable {
 
   async addPoint (updateType, update) {
     try {
-      const newPoint = this.#adaptToClient(await this.#pointsApiService.addPoint(update));
-      this.#points = this.points;
-      this.#points.push(newPoint);
+      this.#points = this.points?.push(
+        this.#adaptToClient(
+          await this.#pointsApiService.addPoint(update)
+        )
+      );
       this._notify(updateType, update);
     } catch (err) {
       throw new Error (DownloadErrorMessage.ERROR_ADD);

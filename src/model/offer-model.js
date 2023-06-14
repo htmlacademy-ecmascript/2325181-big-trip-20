@@ -15,8 +15,7 @@ export default class OfferModel {
 
   async init () {
     try {
-      const offersFromServer = await this.#offersApiService.offers;
-      this.#allOffers.push(...offersFromServer);
+      this.#allOffers.push(...await this.#offersApiService.offers);
     } catch (err) {
       throw new Error(DownloadErrorMessage.ERROR_OFFERS);
     }

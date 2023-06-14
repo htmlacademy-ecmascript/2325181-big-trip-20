@@ -15,8 +15,7 @@ export default class DestinationModel {
 
   async init () {
     try {
-      const destinationsFromServer = await this.#destinationsApiService.destinations;
-      this.#allDestinations.push(...destinationsFromServer);
+      this.#allDestinations.push(...await this.#destinationsApiService.destinations);
     } catch (err) {
       throw new Error(DownloadErrorMessage.ERROR_DESTINATIONS);
     }

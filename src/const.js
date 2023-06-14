@@ -29,11 +29,6 @@ const DateFormat = {
   INFO_DAY:'MMM DD'
 };
 
-const EventAddButtonStatus = {
-  DISABLED: 'disabled',
-  ENABLED: ''
-};
-
 const PointMode = {
   VIEW: 'VIEW',
   EDIT: 'EDIT'
@@ -143,7 +138,6 @@ export {
   PointTypes,
   DateFormat,
   FilterType,
-  EventAddButtonStatus,
   PointMode,
   SortOrder,
   PickerConfiguration,
