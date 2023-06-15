@@ -24,13 +24,14 @@ function createPointEditionFormTemplate(state, isNewPoint, allDestinations) {
   const eventStartDate = getDateTimeFormatted(dateFrom, DateFormat.EVENT_START_END_DATE);
   const eventToDate = getDateTimeFormatted(dateTo, DateFormat.EVENT_START_END_DATE);
   const disabled = isDisabled ? ElementsStatus.DISABLED : '';
-  const getDeleteCancelStatus = (newPoint, deleting) => {
+
+  function getDeleteCancelStatus (newPoint, deleting) {
     if (newPoint) {
       return deleting ? 'Canceling...' : 'Cancel';
     } else {
       return deleting ? 'Deleting...' : 'Delete';
     }
-  };
+  }
 
   function createOfferTemplate (offer) {
 

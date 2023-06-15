@@ -8,7 +8,9 @@ function getDateTimeFormatted (dateTime, dateFormat) {
   return dateTime ? dayjs(dateTime).format(dateFormat) : '';
 }
 
-const getTimeInMinutes = (date) => Math.floor(new Date(date).getTime() / TimeMeasures.MILLISECONDS_IN_MINUTE) * TimeMeasures.MILLISECONDS_IN_MINUTE;
+function getTimeInMinutes (date) {
+  return Math.floor(new Date(date).getTime() / TimeMeasures.MILLISECONDS_IN_MINUTE) * TimeMeasures.MILLISECONDS_IN_MINUTE;
+}
 
 function getTimeDifference (dateTimeOne, dateTimeTwo, isFormat = true) {
   dateTimeOne = getTimeInMinutes(dateTimeOne);

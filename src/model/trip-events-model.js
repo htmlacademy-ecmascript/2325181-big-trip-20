@@ -58,7 +58,7 @@ export default class TripEventsModel extends Observable {
 
   async addPoint (updateType, update) {
     try {
-      this.#points = this.points?.push(
+      this.points?.push(
         this.#adaptToClient(
           await this.#pointsApiService.addPoint(update)
         )
