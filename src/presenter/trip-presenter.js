@@ -68,7 +68,7 @@ export default class TripPresenter {
     return filteredPoints.sort(Sort[this.#actualSortOrder]);
   }
 
-  init = async () => {
+  async init () {
     this.#renderListFilter ();
     this.#renderEventAddButton();
     this.#eventAddButtonComponent.element.disabled = true;
@@ -81,7 +81,7 @@ export default class TripPresenter {
       remove(this.#listEmptyComponent);
       this.#renderListEmpty(true);
     }
-  };
+  }
 
   #renderInitialPointsList () {
     remove(this.#listEmptyComponent);
@@ -126,13 +126,13 @@ export default class TripPresenter {
     render(this.#listSortComponent, this.#tripListComponent.element, RenderPosition.BEFOREBEGIN);
   }
 
-  #resetSortOrder = () => {
+  #resetSortOrder () {
     if (this.#actualSortOrder !== SortOrder.DEFAULT) {
       this.#actualSortOrder = SortOrder.DEFAULT;
       this.#renderListSort(SortOrder.DEFAULT);
     }
     this.#renderPointsList ();
-  };
+  }
 
   #renderPoint (point) {
     const pointPresenter = new PointPresenter({
